@@ -25,9 +25,6 @@ main()
         console.log(err)
     })
 
-app.get('/', (req, res) => {
-    res.send('Hello World!')
-})
 //index route
 app.get('/listings', async(req, res) => {
     let alllistings = await Listing.find({})
