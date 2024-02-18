@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= listing.title %></title>
+</head>
+<style>
+    img{
+        width: 700px;
+    }
+</style>
+<body>
+    <h2><%= listing.title %></h2>
+    <p><%= listing.description %></p>
+    <img src="<%= listing.image %>">
+    <!-- toLocaleString('en-IN')  for comma's in indian style -->
+    <p>&#8377;<%= listing.price.toLocaleString('en-IN') %></p>
+    <p><%= listing.location %></p>
+    <p><%= listing.country %></p>
+    <br>
+    <h4><a href="/listings/<%= listing._id %>/edit">Edit</a> &nbsp;&nbsp;
+        <form action="/listings/<%= listing._id %>?_method=DELETE" method="POST">
+            <button>Delete the listing</button>
+        </form>
+        <br> <br><a href="/listings">Back</a></h4>
+</body>
+</html>
