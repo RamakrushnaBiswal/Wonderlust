@@ -1,28 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= listing.title %></title>
-</head>
-<style>
-    img{
-        width: 700px;
-    }
-</style>
+<% layout('/layouts/boilerplate') %>
 <body>
-    <h2><%= listing.title %></h2>
-    <p><%= listing.description %></p>
-    <img src="<%= listing.image %>">
+    <h2 class="text-center mt-3"><%= listing.title %></h2>
+    <div class="row offset-3">
+        <div class="col-6 offset-1">
+            <img src="<%= listing.image %>" class="img-fluid rounded mb-3 d-block mx-auto shadow" style="height: 60vh;">
+        </div>
+    <div class="row offset-1 col-6">
+        <b><%= listing.description %></b>
+    </div>
     <!-- toLocaleString('en-IN')  for comma's in indian style -->
-    <p>&#8377;<%= listing.price.toLocaleString('en-IN') %></p>
-    <p><%= listing.location %></p>
-    <p><%= listing.country %></p>
+    <div class="row offset-1">
+    <b class="bi bi-currency-rupee text-dark fs-5 mt-1"><%= listing.price.toLocaleString('en-IN') %></b>
+    <b class="text-muted"><%= listing.location %></b>
+    <b class="text-muted fs-b"><%= listing.country %></b>
+    </div>
     <br>
-    <h4><a href="/listings/<%= listing._id %>/edit">Edit</a> &nbsp;&nbsp;
+    <div class="row offset-1 col-6 btns mt-3">
+    <div class="col offset-2">
+    <button type="button" class="btn show-btn"><a href="/listings/<%= listing._id %>/edit" style="text-decoration: none;color: #fff;">Edit</a></button>
+    </div>
+    <div class="col">
         <form action="/listings/<%= listing._id %>?_method=DELETE" method="POST">
-            <button>Delete the listing</button>
+            <button class="btn btn-danger mb-4">Delete</button>
         </form>
-        <br> <br><a href="/listings">Back</a></h4>
+    </div>
+    </div>
+    </div>
 </body>
-</html>
