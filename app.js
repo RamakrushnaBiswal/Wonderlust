@@ -6,9 +6,10 @@ const methodOverride = require('method-override')
 const ejsMate = require('ejs-mate')
 const port = 3000
 const Listing = require('./models/listing.js')
+const Reviews = require('./models/reviews.js')
 const  wrapAsync  = require('./utils/wrapAsync.js')
 const expressError = require('./utils/ExpressError.js')
-const { listingSchema } = require('./schema.js')
+const { listingSchema,reviewSchema } = require('./schema.js')
 
 
 const MOONGODB_URL = 'mongodb://localhost:27017/wonderlust'
@@ -34,6 +35,15 @@ main()
     
 const validateListing = (req, res, next) => {
     let {error} =listingSchema.validate(req.body)
+        if(error){
+            let errMsg=error.details.map(el => el.message).join(',')
+            throw new expressError(errMsg, 400)
+        }else{
+            next()
+        }
+}
+const validateReview = (req, res, next) => {
+    let {error} =reviewSchema.validate(req.body)
         if(error){
             let errMsg=error.details.map(el => el.message).join(',')
             throw new expressError(errMsg, 400)
@@ -73,7 +83,7 @@ app.get('/listings/:id/edit', wrapAsync(async(req, res) => {
 //show route
 app.get('/listings/:id',wrapAsync( async(req, res) => {
     let id = req.params.id
-    let listing = await Listing.findById(id)
+    let listing = await Listing.findById(id).populate('reviews')
     res.render('listings/show', {listing})
 }))
 //delete route
@@ -82,6 +92,18 @@ app.delete('/listings/:id', wrapAsync(async(req, res) => {
     let delteData=await Listing.findByIdAndDelete(id)
     res.redirect('/listings')
     console.log(delteData)
+}))
+
+//reviews route[post]
+app.post('/listings/:id/reviews',validateReview, wrapAsync(async(req, res) => {
+    let id = req.params.id
+    let listing=await Listing.findById(req.params.id)
+    let newReview = new Reviews(req.body.review)
+    listing.reviews.push(newReview)
+    await newReview.save()
+    await listing.save()
+    console.log(newReview)
+    res.redirect(`/listings/${id}`)
 }))
 
 app.all('*', (req, res, next) => {
