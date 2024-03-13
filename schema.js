@@ -1,12 +1,12 @@
 const joi= require('joi')
 module.exports.listingSchema= joi.object({
      listing: joi.object({
-        title: joi.string().required().pattern(new RegExp('^[A-Za-z]+$')),
-        description: joi.string().required().pattern(new RegExp('^[A-Za-z]+$')),
+        title: joi.string().required(),
+        description: joi.string().required(),
         image: joi.string().allow('',null),
         price: joi.number().min(1).required(),
-        location: joi.string().required().pattern(new RegExp('^[A-Za-z]+$')),
-        country: joi.string().required().pattern(new RegExp('^[A-Za-z]+$'))
+        location: joi.string().required(),
+        country: joi.string().required()
     }).required(),
 })
 
