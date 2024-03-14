@@ -1,0 +1,13 @@
+//Salting is used to encrypt passwords. A salt is a random value that is added to the password before it is hashed. 
+//The salt is stored in the database along with the hashed password.
+//When a user logs in, the salt is retrieved from the database and added to the password before it is hashed.   
+//The salt is used to verify the password.
+
+//The salt is a random value that is generated when the user creates an account.
+Ex:- abc= abc%?@# //salt
+     password= abc123
+     abc%?@#abc123  //salt+password
+
+
+// Use of Passport for authentication
+// Passport is a middleware that is used to authenticate requests. It is modular and flexible, and can be used to authenticate requests in a variety of ways.

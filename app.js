@@ -6,11 +6,15 @@ const path = require('path')
 const methodOverride = require('method-override')
 const ejsMate = require('ejs-mate')
 const port = 3000
-const listingRoute= require('./routes/lsting.js')
-const reviewRoute= require('./routes/review.js')
 const expressError = require('./utils/ExpressError.js') 
 const session = require('express-session')
+const passport = require('passport')
+const LocalStrategy = require('passport-local')
+const User = require('./models/user.js')
 
+const listingRouter= require('./routes/lsting.js')
+const reviewRouter= require('./routes/review.js')
+const userRouter= require('./routes/user.js')
 
 const MOONGODB_URL = 'mongodb://localhost:27017/wonderlust'
 
@@ -44,8 +48,22 @@ const sessionConfig = {
     }
 }
 
+app.get('/', (req, res) => {
+    res.send('Hello World!')
+})
+
 app.use(session(sessionConfig))
 app.use(flash()) //for flash message    
+
+//passport middleware
+app.use(passport.initialize()) //initialize passport
+app.use(passport.session()) //use session for passport
+passport.use(new LocalStrategy(User.authenticate())) //use local strategy for passport and authenticate method is provided by passport-local-mongoose
+
+passport.serializeUser(User.serializeUser()) //serialize user means store user in session
+passport.deserializeUser(User.deserializeUser()) //deserialize user means get out user from session
+
+
 
 app.use(async (req, res, next) => {
     res.locals.success = req.flash('success')
@@ -54,8 +72,10 @@ app.use(async (req, res, next) => {
 })
 
 
-app.use('/listings', listingRoute)
-app.use('/listings/:id/reviews',  reviewRoute)
+
+app.use('/listings', listingRouter)
+app.use('/listings/:id/reviews',  reviewRouter)
+app.use('/', userRouter)
 
 
 app.all('*', (req, res, next) => {
