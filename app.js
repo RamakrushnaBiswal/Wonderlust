@@ -53,10 +53,6 @@ const sessionConfig = {
     }
 }
 
-app.get('/', (req, res) => {
-    res.send('Hello World!')
-})
-
 app.use(session(sessionConfig))
 app.use(flash()) //for flash message    
 
