@@ -16,7 +16,7 @@ router.get('/new',isLoggedIn,listingRouter.renderNewForm)
 
 
 router.route('/:id')
-    .put(validateListing,isLoggedIn,isOwner, wrapAsync(listingRouter.updateListing))
+    .put(isLoggedIn,isOwner,upload.single('listing[image]'),validateListing, wrapAsync(listingRouter.updateListing))
     .get(wrapAsync(listingRouter.showListing))
     .delete(isLoggedIn,isOwner, wrapAsync(listingRouter.deleteListing))
 

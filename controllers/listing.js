@@ -22,9 +22,17 @@ module.exports.createListing=async(req, res, next) => {
 }
 
 module.exports.updateListing=async(req, res) => {
+    
     let id = req.params.id
     const updatedListing = req.body.listing
-    await Listing.findByIdAndUpdate(id, updatedListing)
+    let listing=await Listing.findByIdAndUpdate(id, updatedListing)
+
+    if(typeof req.file !== 'undefined'){
+    let url=req.file.path
+    let filename=req.file.filename
+    listing.image={url,filename}
+    await listing.save()
+    }
     res.redirect(`/listings/${id}`)
 }
 
