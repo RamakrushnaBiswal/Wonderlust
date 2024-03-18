@@ -90,7 +90,9 @@ app.use(async (req, res, next) => {
 })
 
 
-
+app.get('/', (req, res) => {
+    res.render('listings/index')
+})
 app.use('/listings', listingRouter)
 app.use('/listings/:id/reviews',  reviewRouter)
 app.use('/', userRouter)
