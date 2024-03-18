@@ -13,6 +13,7 @@ const ejsMate = require('ejs-mate')
 const port = 3000
 const expressError = require('./utils/ExpressError.js') 
 const session = require('express-session')
+const MongoStore = require('connect-mongo')
 const passport = require('passport')
 const LocalStrategy = require('passport-local')
 const User = require('./models/user.js')
@@ -21,10 +22,10 @@ const listingRouter= require('./routes/lsting.js')
 const reviewRouter= require('./routes/review.js')
 const userRouter= require('./routes/user.js')
 
-const MOONGODB_URL = 'mongodb://localhost:27017/wonderlust'
+const dbURL = process.env.ATLAS_DB_URL
 
 async function main() {
-    await mongoose.connect(MOONGODB_URL)
+    await mongoose.connect(dbURL)
 }
 main()
     .then(() => {
@@ -41,8 +42,20 @@ app.use(methodOverride('_method'))
 app.engine('ejs', ejsMate)
 app.use(express.static(path.join(__dirname, '/public')))
 
+const store=MongoStore.create({
+    mongoUrl: dbURL,
+    touchAfter: 24 * 60 * 60,
+    crypto: {
+        secret: 'my secret id!'
+    }
+})
+
+store.on('error', (e)=>{
+    console.log('session store error', e)
+})
 
 const sessionConfig = {
+    store,
     secret: 'my secret id!',
     resave: false,
     saveUninitialized: true,
@@ -52,6 +65,8 @@ const sessionConfig = {
         httpOnly: true //for avoid website hacking
     }
 }
+
+
 
 app.use(session(sessionConfig))
 app.use(flash()) //for flash message    
