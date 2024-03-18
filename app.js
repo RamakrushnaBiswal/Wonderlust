@@ -17,7 +17,7 @@ const MongoStore = require('connect-mongo')
 const passport = require('passport')
 const LocalStrategy = require('passport-local')
 const User = require('./models/user.js')
-
+const Listing = require('./models/listing.js')
 const listingRouter= require('./routes/lsting.js')
 const reviewRouter= require('./routes/review.js')
 const userRouter= require('./routes/user.js')
@@ -88,10 +88,8 @@ app.use(async (req, res, next) => {
     res.locals.currentUser = req.user
     next()
 })
-
-
 app.get('/', (req, res) => {
-    res.render('listings/index')
+    res.redirect('/listings')
 })
 app.use('/listings', listingRouter)
 app.use('/listings/:id/reviews',  reviewRouter)
