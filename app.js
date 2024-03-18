@@ -47,7 +47,8 @@ const store=MongoStore.create({
     touchAfter: 24 * 60 * 60,
     crypto: {
         secret: process.env.SECRET
-    }
+    },
+    client: process.env.ATLAS_DB_URL
 })
 
 store.on('error', (e)=>{
